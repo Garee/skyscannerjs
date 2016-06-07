@@ -12,7 +12,59 @@ describe("Skyscanner", () => {
         skyscanner = new Skyscanner(API_KEY);
     });
 
-    describe("Reference", () => {
+    describe("flights", () => {
+        describe("livePrices", () => {
+            const params = {
+                country: "UK",
+                currency: "GBP",
+                locale: "en-GB",
+                locationSchema: "Iata",
+                originplace: "EDI",
+                destinationplace: "LHR",
+                outbounddate: "2016-06-13",
+                adults: 1
+            };
+
+            describe("session", () => {
+                it("should create a session", () => {
+                    return skyscanner.flights.livePrices.session(params)
+                        .then((response) => {
+                            expect(response.status).to.equal(201);
+                            expect(response.headers).to.have.any.keys("location");
+                        });
+                });
+            });
+
+            describe("poll", () => {
+                it("should poll a session", () => {
+                    return skyscanner.flights.livePrices.session(params)
+                        .then((response) => {
+                            const location = response.headers.location;
+                            return location.substring(location.lastIndexOf("/") + 1);
+                        })
+                        .then((session) => {
+                            return skyscanner.flights.livePrices.poll(session)
+                                .then((response) => {
+                                    expect(response.status).to.equal(200);
+
+                                    const keys = [
+                                        "Itineraries",
+                                        "Legs",
+                                        "Carriers",
+                                        "Agents",
+                                        "Places",
+                                        "Currencies"
+                                    ];
+
+                                    expect(response.data).to.contain.all.keys(keys);
+                                });
+                        });
+                });
+            });
+        });
+    });
+
+    describe("reference", () => {
         describe("currencies", () => {
             it("should return a list of currencies", () => {
                 return skyscanner.reference.currencies()

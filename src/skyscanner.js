@@ -1,8 +1,26 @@
 import axios from "axios";
+import querystring from "querystring";
 
 export class Skyscanner {
     constructor(apiKey) {
         this.apiKey = apiKey;
+
+        this.flights = {
+            livePrices: {
+                session: (data, asJSON = true) => {
+                    const url = `${Skyscanner.flightPricingURL}`;
+                    const headers = {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                        "Accept": asJSON ? "application/json" : "application/xml"
+                    };
+                    return this.post(url, data, {headers: headers});
+                },
+                poll: (session, params) => {
+                    const url = `${Skyscanner.flightPricingURL}/${session}`;
+                    return this.get(url, params);
+                }
+            }
+        };
 
         this.reference = {
             currencies: () => {
@@ -28,6 +46,10 @@ export class Skyscanner {
         return `${Skyscanner.baseURL}/reference/v1.0`;
     }
 
+    static get flightPricingURL() {
+        return `${Skyscanner.baseURL}/pricing/v1.0`;
+    }
+
     static get locationSchemas() {
         return [
             "Iata",
@@ -46,21 +68,36 @@ export class Skyscanner {
         ];
     }
 
-    get(url, params, config) {
-        return this.request(axios.get, url, params, config);
+    static get cabinClasses() {
+        return [
+            "Economy",
+            "PremiumEconomy",
+            "Business",
+            "First"
+        ];
     }
 
-    post(url, params, config) {
-        return this.request(axios.post, url, params, config);
+    static get sortTypes() {
+        return [
+            "carrier",
+            "duration",
+            "outboundarrivetime",
+            "outbounddeparttime",
+            "inboundarrivetime",
+            "inbounddeparttime",
+            "price"
+        ];
     }
 
-    put(url, params, config) {
-        return this.request(axios.put, url, params, config);
-    }
-
-    request(method, url, params = {}, config = {}) {
+    get(url, params = {}, config = {}) {
         config.params = config.params || params;
         config.params.apiKey = this.apiKey;
-        return method(url, config);
+        return axios.get(url, config);
+    }
+
+    post(url, data = {}, config = {}) {
+        data.apiKey = this.apiKey;
+        data = querystring.stringify(data);
+        return axios.post(url, data, config);
     }
 }
