@@ -29,6 +29,27 @@ export class Skyscanner {
                     const url = `${Skyscanner.flightPricingURL}/${session}/booking/${itinerary}`;
                     return this.get(url, params);
                 }
+            },
+            browse: {
+                quotes: (params, ipAddr, asJSON = true) => {
+                    let url = `${Skyscanner.browseQuotesURL}`;
+                    url += `/${params.market}`;
+                    url += `/${params.currency}`;
+                    url += `/${params.locale}`;
+                    url += `/${params.originPlace}`;
+                    url += `/${params.destinationPlace}`;
+                    url += `/${params.outboundPartialDate}`;
+
+                    if (params.inboundPartialDate) {
+                        url += `/${params.inboundPartialDate}`;
+                    }
+
+                    const headers = {
+                        "Accept": asJSON ? "application/json" : "application/xml",
+                        "X-Forwarded-For": ipAddr
+                    };
+                    return this.get(url, {}, {headers: headers});
+                }
             }
         };
 
@@ -58,6 +79,10 @@ export class Skyscanner {
 
     static get flightPricingURL() {
         return `${Skyscanner.baseURL}/pricing/v1.0`;
+    }
+
+    static get browseQuotesURL() {
+        return `${Skyscanner.baseURL}/browsequotes/v1.0`;
     }
 
     static get locationSchemas() {

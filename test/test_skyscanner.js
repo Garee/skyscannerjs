@@ -23,6 +23,8 @@ describe("Skyscanner", () => {
         adults: 1
     };
 
+    const ipAddr = "127.0.0.1";
+
     describe("flights", () => {
         describe("livePrices", () => {
             describe("session", () => {
@@ -135,6 +137,27 @@ describe("Skyscanner", () => {
 
                                     expect(response.data).to.contain.all.keys(keys);
                                 });
+                        });
+                });
+            });
+        });
+
+        describe("browse", () => {
+            describe("quotes", () => {
+                const query = {
+                    market: "UK",
+                    currency: "GBP",
+                    locale: "en-GB",
+                    originPlace: "EDI",
+                    destinationPlace: "LHR",
+                    outboundPartialDate: "2016-06-13"
+                };
+
+                it("should return quotes", () => {
+                    return skyscanner.flights.browse.quotes(query, ipAddr)
+                        .then((response) => {
+                            expect(response.status).to.equal(200);
+                            expect(response.data).to.contain.key("Quotes");
                         });
                 });
             });
