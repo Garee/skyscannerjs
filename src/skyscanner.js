@@ -19,6 +19,16 @@ export class Skyscanner {
                     const url = `${Skyscanner.flightPricingURL}/${session}`;
                     return this.get(url, params);
                 }
+            },
+            bookingDetails: {
+                session: (session, data) => {
+                    const url = `${Skyscanner.flightPricingURL}/${session}/booking`;
+                    return this.put(url, data);
+                },
+                poll: (session, itinerary, params) => {
+                    const url = `${Skyscanner.flightPricingURL}/${session}/booking/${itinerary}`;
+                    return this.get(url, params);
+                }
             }
         };
 
@@ -99,5 +109,11 @@ export class Skyscanner {
         data.apiKey = this.apiKey;
         data = querystring.stringify(data);
         return axios.post(url, data, config);
+    }
+
+    put(url, data = {}, config = {}) {
+        data.apiKey = this.apiKey;
+        data = querystring.stringify(data);
+        return axios.put(url, data, config);
     }
 }

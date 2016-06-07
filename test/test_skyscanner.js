@@ -12,25 +12,25 @@ describe("Skyscanner", () => {
         skyscanner = new Skyscanner(API_KEY);
     });
 
+    const params = {
+        country: "UK",
+        currency: "GBP",
+        locale: "en-GB",
+        locationSchema: "Iata",
+        originplace: "EDI",
+        destinationplace: "LHR",
+        outbounddate: "2016-06-13",
+        adults: 1
+    };
+
     describe("flights", () => {
         describe("livePrices", () => {
-            const params = {
-                country: "UK",
-                currency: "GBP",
-                locale: "en-GB",
-                locationSchema: "Iata",
-                originplace: "EDI",
-                destinationplace: "LHR",
-                outbounddate: "2016-06-13",
-                adults: 1
-            };
-
             describe("session", () => {
                 it("should create a session", () => {
                     return skyscanner.flights.livePrices.session(params)
                         .then((response) => {
                             expect(response.status).to.equal(201);
-                            expect(response.headers).to.have.any.keys("location");
+                            expect(response.headers).to.contain.key("location");
                         });
                 });
             });
@@ -54,6 +54,83 @@ describe("Skyscanner", () => {
                                         "Agents",
                                         "Places",
                                         "Currencies"
+                                    ];
+
+                                    expect(response.data).to.contain.all.keys(keys);
+                                });
+                        });
+                });
+            });
+        });
+
+        describe("bookingDetails", () => {
+            describe("session", () => {
+                it("should create a session", () => {
+                    return skyscanner.flights.livePrices.session(params)
+                        .then((response) => {
+                            const location = response.headers.location;
+                            return location.substring(location.lastIndexOf("/") + 1);
+                        })
+                        .then((session) => {
+                            return skyscanner.flights.livePrices.poll(session)
+                                .then((response) => {
+                                    const itineraries = response.data.Itineraries;
+                                    const itinerary = itineraries[0];
+                                    return {
+                                        session: session,
+                                        outboundlegid: itinerary.OutboundLegId,
+                                        inboundlegid: itinerary.InboundLegId
+                                    };
+                                });
+                        })
+                        .then((itinerary) => {
+                            return skyscanner.flights.bookingDetails.session(itinerary.session, itinerary)
+                                .then((response) => {
+                                    expect(response.status).to.equal(201);
+                                    expect(response.headers).to.contain.key("location");
+                                });
+                        });
+                });
+            });
+
+            describe("poll", () => {
+                it("should poll a session", () => {
+                    return skyscanner.flights.livePrices.session(params)
+                        .then((response) => {
+                            const location = response.headers.location;
+                            return location.substring(location.lastIndexOf("/") + 1);
+                        })
+                        .then((session) => {
+                            return skyscanner.flights.livePrices.poll(session)
+                                .then((response) => {
+                                    const itineraries = response.data.Itineraries;
+                                    const itinerary = itineraries[0];
+                                    return {
+                                        session: session,
+                                        outboundlegid: itinerary.OutboundLegId,
+                                        inboundlegid: itinerary.InboundLegId
+                                    };
+                                });
+                        })
+                        .then((itinerary) => {
+                            return skyscanner.flights.bookingDetails.session(itinerary.session, itinerary)
+                                .then((response) => {
+                                    const location = response.headers.location;
+                                    return {
+                                        session: itinerary.session,
+                                        itinerary: location.substring(location.lastIndexOf("/") + 1)
+                                    };
+                                });
+                        })
+                        .then((itinerary) => {
+                            return skyscanner.flights.bookingDetails.poll(itinerary.session, itinerary.itinerary)
+                                .then((response) => {
+                                    expect(response.status).to.equal(200);
+
+                                    const keys = [
+                                        "Segments",
+                                        "BookingOptions",
+                                        "Places"
                                     ];
 
                                     expect(response.data).to.contain.all.keys(keys);
