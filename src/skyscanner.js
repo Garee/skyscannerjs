@@ -32,7 +32,45 @@ export class Skyscanner {
             },
             browse: {
                 quotes: (params, ipAddr, asJSON = true) => {
-                    let url = `${Skyscanner.browseQuotesURL}`;
+                    let url = Skyscanner.browseQuotesURL;
+                    url += `/${params.market}`;
+                    url += `/${params.currency}`;
+                    url += `/${params.locale}`;
+                    url += `/${params.originPlace}`;
+                    url += `/${params.destinationPlace}`;
+                    url += `/${params.outboundPartialDate}`;
+
+                    if (params.inboundPartialDate) {
+                        url += `/${params.inboundPartialDate}`;
+                    }
+
+                    const headers = {
+                        "Accept": asJSON ? "application/json" : "application/xml",
+                        "X-Forwarded-For": ipAddr
+                    };
+                    return this.get(url, {}, {headers: headers});
+                },
+                routes: (params, ipAddr, asJSON = true) => {
+                    let url = Skyscanner.browseRoutesURL;
+                    url += `/${params.market}`;
+                    url += `/${params.currency}`;
+                    url += `/${params.locale}`;
+                    url += `/${params.originPlace}`;
+                    url += `/${params.destinationPlace}`;
+                    url += `/${params.outboundPartialDate}`;
+
+                    if (params.inboundPartialDate) {
+                        url += `/${params.inboundPartialDate}`;
+                    }
+
+                    const headers = {
+                        "Accept": asJSON ? "application/json" : "application/xml",
+                        "X-Forwarded-For": ipAddr
+                    };
+                    return this.get(url, {}, {headers: headers});
+                },
+                dates: (params, ipAddr, asJSON = true) => {
+                    let url = Skyscanner.browseDatesURL;
                     url += `/${params.market}`;
                     url += `/${params.currency}`;
                     url += `/${params.locale}`;
@@ -83,6 +121,14 @@ export class Skyscanner {
 
     static get browseQuotesURL() {
         return `${Skyscanner.baseURL}/browsequotes/v1.0`;
+    }
+
+    static get browseRoutesURL() {
+        return `${Skyscanner.baseURL}/browseroutes/v1.0`;
+    }
+
+    static get browseDatesURL() {
+        return `${Skyscanner.baseURL}/browsedates/v1.0`;
     }
 
     static get locationSchemas() {

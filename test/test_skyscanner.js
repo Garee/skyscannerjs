@@ -143,21 +143,43 @@ describe("Skyscanner", () => {
         });
 
         describe("browse", () => {
-            describe("quotes", () => {
-                const query = {
-                    market: "UK",
-                    currency: "GBP",
-                    locale: "en-GB",
-                    originPlace: "EDI",
-                    destinationPlace: "LHR",
-                    outboundPartialDate: "2016-06-13"
-                };
+            const query = {
+                market: "UK",
+                currency: "GBP",
+                locale: "en-GB",
+                originPlace: "EDI",
+                destinationPlace: "LHR",
+                outboundPartialDate: "2016-06-13"
+            };
 
+            describe("quotes", () => {
                 it("should return quotes", () => {
                     return skyscanner.flights.browse.quotes(query, ipAddr)
                         .then((response) => {
                             expect(response.status).to.equal(200);
                             expect(response.data).to.contain.key("Quotes");
+                        });
+                });
+            });
+
+            describe("routes", () => {
+                it("should return routes", () => {
+                    return skyscanner.flights.browse.routes(query, ipAddr)
+                        .then((response) => {
+                            expect(response.status).to.equal(200);
+                            expect(response.data).to.contain.key("Quotes");
+                            expect(response.data).to.contain.key("Routes");
+                        });
+                });
+            });
+
+            describe("dates", () => {
+                it("should return dates", () => {
+                    return skyscanner.flights.browse.dates(query, ipAddr)
+                        .then((response) => {
+                            expect(response.status).to.equal(200);
+                            expect(response.data).to.contain.key("Quotes");
+                            expect(response.data).to.contain.key("Dates");
                         });
                 });
             });
