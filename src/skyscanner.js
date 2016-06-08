@@ -128,6 +128,18 @@ export class Skyscanner {
                         "Accept": asJSON ? "application/json" : "application/xml"
                     };
                     return this.get(url, {userip: ipAddr}, {headers: headers});
+                },
+                poll: (session, deltaExcludedWebsites) => {
+                    const url = `${Skyscanner.carHirePricingURL}/${session}`;
+
+                    let params = {};
+                    if (deltaExcludedWebsites) {
+                        params = {deltaExcludedWebsites: deltaExcludedWebsites};
+                    }
+
+                    let config = {};
+                    config.params = config.params || params;
+                    return axios.get(url, config);
                 }
             }
         };

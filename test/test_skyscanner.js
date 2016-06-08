@@ -218,6 +218,29 @@ describe("Skyscanner", () => {
                         });
                 });
             });
+
+            describe("poll", () => {
+                it("should poll the session", () => {
+                    return skyscanner.carHire.livePrices.session(q, ipAddr)
+                        .then((response) => {
+                            const location = response.headers.location;
+                            return location.substring(location.lastIndexOf("/") + 1);
+                        })
+                        .then((session) => {
+                            return skyscanner.carHire.livePrices.poll(session)
+                                .then((response) => {
+                                    expect(response.status).to.equal(200);
+
+                                    const keys = [
+                                        "cars",
+                                        "websites"
+                                    ];
+
+                                    expect(response.data).to.contain.keys(keys);
+                                });
+                        });
+                });
+            });
         });
     });
 
