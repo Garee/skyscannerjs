@@ -183,6 +183,16 @@ describe("Skyscanner", () => {
                         });
                 });
             });
+
+            describe("grid", () => {
+                it("should return dates", () => {
+                    return skyscanner.flights.browse.grid(query, ipAddr)
+                        .then((response) => {
+                            expect(response.status).to.equal(200);
+                            expect(response.data).to.contain.key("Dates");
+                        });
+                });
+            });
         });
     });
 

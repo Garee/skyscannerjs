@@ -87,6 +87,25 @@ export class Skyscanner {
                         "X-Forwarded-For": ipAddr
                     };
                     return this.get(url, {}, {headers: headers});
+                },
+                grid: (params, ipAddr, asJSON = true) => {
+                    let url = Skyscanner.browseGridURL;
+                    url += `/${params.market}`;
+                    url += `/${params.currency}`;
+                    url += `/${params.locale}`;
+                    url += `/${params.originPlace}`;
+                    url += `/${params.destinationPlace}`;
+                    url += `/${params.outboundPartialDate}`;
+
+                    if (params.inboundPartialDate) {
+                        url += `/${params.inboundPartialDate}`;
+                    }
+
+                    const headers = {
+                        "Accept": asJSON ? "application/json" : "application/xml",
+                        "X-Forwarded-For": ipAddr
+                    };
+                    return this.get(url, {}, {headers: headers});
                 }
             }
         };
@@ -129,6 +148,10 @@ export class Skyscanner {
 
     static get browseDatesURL() {
         return `${Skyscanner.baseURL}/browsedates/v1.0`;
+    }
+
+    static get browseGridURL() {
+        return `${Skyscanner.baseURL}/browsegrid/v1.0`;
     }
 
     static get locationSchemas() {
