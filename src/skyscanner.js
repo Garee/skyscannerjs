@@ -110,6 +110,28 @@ export class Skyscanner {
             }
         };
 
+        this.carHire = {
+            livePrices: {
+                session: (params, ipAddr, asJSON = true) => {
+                    let url = Skyscanner.carHirePricingURL;
+                    url += `/${params.market}`;
+                    url += `/${params.currency}`;
+                    url += `/${params.locale}`;
+                    url += `/${params.pickupplace}`;
+                    url += `/${params.dropoffplace}`;
+                    url += `/${params.pickupdatetime}`;
+                    url += `/${params.dropoffdatetime}`;
+                    url += `/${params.driverage}`;
+
+                    const headers = {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                        "Accept": asJSON ? "application/json" : "application/xml"
+                    };
+                    return this.get(url, {userip: ipAddr}, {headers: headers});
+                }
+            }
+        };
+
         this.reference = {
             currencies: () => {
                 const url = `${Skyscanner.referenceURL}/currencies`;
@@ -152,6 +174,10 @@ export class Skyscanner {
 
     static get browseGridURL() {
         return `${Skyscanner.baseURL}/browsegrid/v1.0`;
+    }
+
+    static get carHirePricingURL() {
+        return `${Skyscanner.baseURL}/carhire/liveprices/v2`;
     }
 
     static get locationSchemas() {

@@ -196,6 +196,31 @@ describe("Skyscanner", () => {
         });
     });
 
+    describe("carHire", () => {
+        describe("livePrices", () => {
+            const q = {
+                market: "UK",
+                currency: "GBP",
+                locale: "en-GB",
+                pickupplace: "EDI",
+                dropoffplace: "GLA",
+                pickupdatetime: "2016-06-13T19:00",
+                dropoffdatetime: "2016-06-14T19:00",
+                driverage: 40
+            };
+
+            describe("session", () => {
+                it("should create a session", () => {
+                    return skyscanner.carHire.livePrices.session(q, ipAddr)
+                        .then((response) => {
+                            expect(response.status).to.equal(200);
+                            expect(response.headers).to.contain.key("location");
+                        });
+                });
+            });
+        });
+    });
+
     describe("reference", () => {
         describe("currencies", () => {
             it("should return a list of currencies", () => {
