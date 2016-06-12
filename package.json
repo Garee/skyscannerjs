@@ -1,7 +1,7 @@
 {
   "name": "skyscannerjs",
   "version": "0.2.0",
-  "description": "Node.js wrapper for the Skyscanner travel APIs.",
+  "description": "Promise based wrapper for the Skyscanner travel APIs.",
   "main": "lib/skyscanner.js",
   "scripts": {
     "test": "npm run build && mocha --compilers js:babel-core/register --timeout 30000",

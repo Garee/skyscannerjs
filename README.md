@@ -14,16 +14,16 @@ $ npm install skyscannerjs
 
 ## Examples
 
-### Create an API object.
+### Create an API object
 
 ```javascript
 // ES6
 import skyscanner from "skyscanner";
 const apiKey = "s3r3t4PIk3y";
-const api = skyscanner.API(apiKey);
+const api = new skyscanner.API(apiKey);
 
 // ES5
 var skyscanner = require("skyscanner");
 var apiKey = "s3r3t4PIk3y";
-var api = skyscanner.API(apiKey);
+var api = new skyscanner.API(apiKey);
 ```
