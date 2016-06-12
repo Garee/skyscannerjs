@@ -1,38 +1,45 @@
 import axios from "axios";
 import querystring from "querystring";
 
-export class Skyscanner {
+export class API {
     constructor(apiKey) {
         this.apiKey = apiKey;
 
         this.flights = {
             livePrices: {
                 session: (data, asJSON = true) => {
-                    const url = `${Skyscanner.flightPricingURL}`;
-                    const headers = {
-                        "Content-Type": "application/x-www-form-urlencoded",
-                        "Accept": asJSON ? "application/json" : "application/xml"
-                    };
-                    return this.post(url, data, {headers: headers});
+                    const url = API.flightPricingURL;
+                    data.apiKey = apiKey;
+                    data = querystring.stringify(data);
+                    return axios.post(url, data, {
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded",
+                            "Accept": asJSON ? "application/json" : "application/xml"
+                        }
+                    });
                 },
-                poll: (session, params) => {
-                    const url = `${Skyscanner.flightPricingURL}/${session}`;
-                    return this.get(url, params);
-                }
-            },
-            bookingDetails: {
-                session: (session, data) => {
-                    const url = `${Skyscanner.flightPricingURL}/${session}/booking`;
-                    return this.put(url, data);
+                poll: (session, params = {}) => {
+                    const url = `${API.flightPricingURL}/${session}`;
+                    params.apiKey = apiKey;
+                    return axios.get(url, {params: params});
                 },
-                poll: (session, itinerary, params) => {
-                    const url = `${Skyscanner.flightPricingURL}/${session}/booking/${itinerary}`;
-                    return this.get(url, params);
+                bookingDetails: {
+                    session: (session, data) => {
+                        const url = `${API.flightPricingURL}/${session}/booking`;
+                        data.apiKey = apiKey;
+                        data = querystring.stringify(data);
+                        return axios.put(url, data);
+                    },
+                    poll: (session, itinerary, params = {}) => {
+                        const url = `${API.flightPricingURL}/${session}/booking/${itinerary}`;
+                        params.apiKey = apiKey;
+                        return axios.get(url, {params: params});
+                    }
                 }
             },
             browse: {
-                quotes: (params, ipAddr, asJSON = true) => {
-                    let url = Skyscanner.browseQuotesURL;
+                quotes: (params, asJSON = true) => {
+                    let url = API.browseQuotesURL;
                     url += `/${params.market}`;
                     url += `/${params.currency}`;
                     url += `/${params.locale}`;
@@ -44,14 +51,18 @@ export class Skyscanner {
                         url += `/${params.inboundPartialDate}`;
                     }
 
-                    const headers = {
-                        "Accept": asJSON ? "application/json" : "application/xml",
-                        "X-Forwarded-For": ipAddr
-                    };
-                    return this.get(url, {}, {headers: headers});
+                    return axios.get(url, {
+                        headers: {
+                            "Accept": asJSON ? "application/json" : "application/xml",
+                            "X-Forwarded-For": params.ip
+                        },
+                        params: {
+                            apiKey: apiKey
+                        }
+                    });
                 },
-                routes: (params, ipAddr, asJSON = true) => {
-                    let url = Skyscanner.browseRoutesURL;
+                routes: (params, asJSON = true) => {
+                    let url = API.browseRoutesURL;
                     url += `/${params.market}`;
                     url += `/${params.currency}`;
                     url += `/${params.locale}`;
@@ -63,14 +74,18 @@ export class Skyscanner {
                         url += `/${params.inboundPartialDate}`;
                     }
 
-                    const headers = {
-                        "Accept": asJSON ? "application/json" : "application/xml",
-                        "X-Forwarded-For": ipAddr
-                    };
-                    return this.get(url, {}, {headers: headers});
+                    return axios.get(url, {
+                        headers: {
+                            "Accept": asJSON ? "application/json" : "application/xml",
+                            "X-Forwarded-For": params.ip
+                        },
+                        params: {
+                            apiKey: apiKey
+                        }
+                    });
                 },
-                dates: (params, ipAddr, asJSON = true) => {
-                    let url = Skyscanner.browseDatesURL;
+                dates: (params, asJSON = true) => {
+                    let url = API.browseDatesURL;
                     url += `/${params.market}`;
                     url += `/${params.currency}`;
                     url += `/${params.locale}`;
@@ -82,14 +97,18 @@ export class Skyscanner {
                         url += `/${params.inboundPartialDate}`;
                     }
 
-                    const headers = {
-                        "Accept": asJSON ? "application/json" : "application/xml",
-                        "X-Forwarded-For": ipAddr
-                    };
-                    return this.get(url, {}, {headers: headers});
+                    return axios.get(url, {
+                        headers: {
+                            "Accept": asJSON ? "application/json" : "application/xml",
+                            "X-Forwarded-For": params.ip
+                        },
+                        params: {
+                            apiKey: apiKey
+                        }
+                    });
                 },
-                grid: (params, ipAddr, asJSON = true) => {
-                    let url = Skyscanner.browseGridURL;
+                grid: (params, asJSON = true) => {
+                    let url = API.browseGridURL;
                     url += `/${params.market}`;
                     url += `/${params.currency}`;
                     url += `/${params.locale}`;
@@ -101,19 +120,23 @@ export class Skyscanner {
                         url += `/${params.inboundPartialDate}`;
                     }
 
-                    const headers = {
-                        "Accept": asJSON ? "application/json" : "application/xml",
-                        "X-Forwarded-For": ipAddr
-                    };
-                    return this.get(url, {}, {headers: headers});
+                    return axios.get(url, {
+                        headers: {
+                            "Accept": asJSON ? "application/json" : "application/xml",
+                            "X-Forwarded-For": params.ip
+                        },
+                        params: {
+                            apiKey: apiKey
+                        }
+                    });
                 }
             }
         };
 
         this.carHire = {
             livePrices: {
-                session: (params, ipAddr, asJSON = true) => {
-                    let url = Skyscanner.carHirePricingURL;
+                session: (params, asJSON = true) => {
+                    let url = API.carHirePricingURL;
                     url += `/${params.market}`;
                     url += `/${params.currency}`;
                     url += `/${params.locale}`;
@@ -123,40 +146,157 @@ export class Skyscanner {
                     url += `/${params.dropoffdatetime}`;
                     url += `/${params.driverage}`;
 
-                    const headers = {
-                        "Content-Type": "application/x-www-form-urlencoded",
-                        "Accept": asJSON ? "application/json" : "application/xml"
-                    };
-                    return this.get(url, {userip: ipAddr}, {headers: headers});
+                    return axios.get(url, {
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded",
+                            "Accept": asJSON ? "application/json" : "application/xml"
+                        },
+                        params: {
+                            apiKey: apiKey,
+                            userip: params.ip
+                        }
+                    });
                 },
                 poll: (session, deltaExcludedWebsites) => {
-                    const url = `${Skyscanner.carHirePricingURL}/${session}`;
+                    const url = `${API.carHirePricingURL}/${session}`;
 
                     let params = {};
                     if (deltaExcludedWebsites) {
-                        params = {deltaExcludedWebsites: deltaExcludedWebsites};
+                        params.deltaExcludedWebsites = deltaExcludedWebsites;
                     }
 
-                    let config = {};
-                    config.params = config.params || params;
-                    return axios.get(url, config);
+                    return axios.get(url, {params: params});
                 }
+            }
+        };
+
+        this.hotels = {
+            livePrices: {
+                session: (params, asJSON = true) => {
+                    let url = API.hotelPricingURL;
+                    url += `/${params.market}`;
+                    url += `/${params.currency}`;
+                    url += `/${params.locale}`;
+                    url += `/${params.entityId}`;
+                    url += `/${params.checkindate}`;
+                    url += `/${params.checkoutdate}`;
+                    url += `/${params.guests}`;
+                    url += `/${params.rooms}`;
+
+                    return axios.get(url, {
+                        headers: {
+                            "Accept": asJSON ? "application/json" : "application/xml"
+                        },
+                        params: {
+                            apiKey: apiKey
+                        }
+                    });
+                },
+                poll: (session, params = {}) => {
+                    const url = `${API.hotelPricingURL}/${session}`;
+                    return axios.get(url, {params: params});
+                },
+                details: {
+                    session: (session, params) => {
+                        const url = `${API.hotelDetailsURL}/details/${session}`;
+                        return axios.get(url, {params: params});
+                    },
+                    poll: (session, params) => {
+                        const url = `${API.hotelDetailsURL}/polldetails/${session}`;
+                        return axios.get(url, {params: params});
+                    }
+                }
+            },
+            autosuggest: (params, asJSON = true) => {
+                let url = API.hotelAutosuggestURL;
+                url += `/${params.market}`;
+                url += `/${params.currency}`;
+                url += `/${params.locale}`;
+                url += `/${params.query}`;
+
+                return axios.get(url, {
+                    headers: {
+                        "Accept": asJSON ? "application/json" : "application/xml"
+                    },
+                    params: {
+                        apiKey: apiKey
+                    }
+                });
             }
         };
 
         this.reference = {
             currencies: () => {
-                const url = `${Skyscanner.referenceURL}/currencies`;
-                return this.get(url);
+                const url = `${API.referenceURL}/currencies`;
+                return axios.get(url, {
+                    params: {
+                        apiKey: apiKey
+                    }
+                });
             },
             locales: () => {
-                const url = `${Skyscanner.referenceURL}/locales`;
-                return this.get(url);
+                const url = `${API.referenceURL}/locales`;
+                return axios.get(url, {
+                    params: {
+                        apiKey: apiKey
+                    }
+                });
             },
             countries: (locale) => {
-                const url = `${Skyscanner.referenceURL}/countries/${locale}`;
-                return this.get(url);
+                const url = `${API.referenceURL}/countries/${locale}`;
+                return axios.get(url, {
+                    params: {
+                        apiKey: apiKey
+                    }
+                });
             }
+        };
+
+        this.locationAutosuggest = (params, asJSON = true) => {
+            let url = API.locationAutosuggestURL;
+            url += `/${params.market}`;
+            url += `/${params.currency}`;
+            url += `/${params.locale}`;
+
+            let reqParams = {
+                apiKey: apiKey
+            };
+
+            if (params.query) {
+                reqParams.query = params.query;
+            } else {
+                reqParams.id = params.id;
+            }
+
+            return axios.get(url, {
+                headers: {
+                    "Accept": asJSON ? "application/json" : "application/xml"
+                },
+                params: reqParams
+            });
+        };
+
+        this.referral = (params) => {
+            let url = API.referralURL;
+            url += `/${params.market}`;
+            url += `/${params.currency}`;
+            url += `/${params.locale}`;
+            url += `/${params.originPlace}`;
+            url += `/${params.destinationPlace}`;
+            url += `/${params.outboundPartialDate}`;
+
+            if (params.inboundPartialDate) {
+                url += `/${params.inboundPartialDate}`;
+            }
+
+            return axios.get(url, {
+                headers: {
+                    "X-Forwarded-For": params.ip
+                },
+                params: {
+                    apiKey: apiKey
+                }
+            });
         };
     }
 
@@ -165,87 +305,50 @@ export class Skyscanner {
     }
 
     static get referenceURL() {
-        return `${Skyscanner.baseURL}/reference/v1.0`;
+        return `${API.baseURL}/reference/v1.0`;
     }
 
     static get flightPricingURL() {
-        return `${Skyscanner.baseURL}/pricing/v1.0`;
+        return `${API.baseURL}/pricing/v1.0`;
     }
 
     static get browseQuotesURL() {
-        return `${Skyscanner.baseURL}/browsequotes/v1.0`;
+        return `${API.baseURL}/browsequotes/v1.0`;
     }
 
     static get browseRoutesURL() {
-        return `${Skyscanner.baseURL}/browseroutes/v1.0`;
+        return `${API.baseURL}/browseroutes/v1.0`;
     }
 
     static get browseDatesURL() {
-        return `${Skyscanner.baseURL}/browsedates/v1.0`;
+        return `${API.baseURL}/browsedates/v1.0`;
     }
 
     static get browseGridURL() {
-        return `${Skyscanner.baseURL}/browsegrid/v1.0`;
+        return `${API.baseURL}/browsegrid/v1.0`;
     }
 
     static get carHirePricingURL() {
-        return `${Skyscanner.baseURL}/carhire/liveprices/v2`;
+        return `${API.baseURL}/carhire/liveprices/v2`;
     }
 
-    static get locationSchemas() {
-        return [
-            "Iata",
-            "GeoNameCode",
-            "GeoNameId",
-            "Rnid",
-            "Sky"
-        ];
+    static get hotelPricingURL() {
+        return `${API.baseURL}/hotels/liveprices/v2`;
     }
 
-    static get carrierSchemas() {
-        return [
-            "Iata",
-            "Icao",
-            "Skyscanner"
-        ];
+    static get hotelDetailsURL() {
+        return `${API.baseURL}/hotels/livedetails/v2`;
     }
 
-    static get cabinClasses() {
-        return [
-            "Economy",
-            "PremiumEconomy",
-            "Business",
-            "First"
-        ];
+    static get hotelAutosuggestURL() {
+        return `${API.baseURL}/hotels/autosuggest/v2`;
     }
 
-    static get sortTypes() {
-        return [
-            "carrier",
-            "duration",
-            "outboundarrivetime",
-            "outbounddeparttime",
-            "inboundarrivetime",
-            "inbounddeparttime",
-            "price"
-        ];
+    static get locationAutosuggestURL() {
+        return `${API.baseURL}/autosuggest/v1.0`;
     }
 
-    get(url, params = {}, config = {}) {
-        config.params = config.params || params;
-        config.params.apiKey = this.apiKey;
-        return axios.get(url, config);
-    }
-
-    post(url, data = {}, config = {}) {
-        data.apiKey = this.apiKey;
-        data = querystring.stringify(data);
-        return axios.post(url, data, config);
-    }
-
-    put(url, data = {}, config = {}) {
-        data.apiKey = this.apiKey;
-        data = querystring.stringify(data);
-        return axios.put(url, data, config);
+    static get referralURL() {
+        return `${API.baseURL}/referral/v1.0`;
     }
 }
