@@ -7,11 +7,11 @@ export class API {
 
         this.flights = {
             livePrices: {
-                session: (data, asJSON = true) => {
+                session: (params, asJSON = true) => {
                     const url = API.flightPricingURL;
-                    data.apiKey = apiKey;
-                    data = querystring.stringify(data);
-                    return axios.post(url, data, {
+                    params.apiKey = apiKey;
+                    params = querystring.stringify(params);
+                    return axios.post(url, params, {
                         headers: {
                             "Content-Type": "application/x-www-form-urlencoded",
                             "Accept": asJSON ? "application/json" : "application/xml"
@@ -19,19 +19,19 @@ export class API {
                     });
                 },
                 poll: (session, params = {}) => {
-                    const url = `${API.flightPricingURL}/${session}`;
                     params.apiKey = apiKey;
-                    return axios.get(url, {params: params});
+                    return axios.get(session, {params: params});
                 },
                 bookingDetails: {
-                    session: (session, data) => {
-                        const url = `${API.flightPricingURL}/${session}/booking`;
-                        data.apiKey = apiKey;
-                        data = querystring.stringify(data);
-                        return axios.put(url, data);
+                    session: (session, params) => {
+                        let url = `${session}/booking`;
+                        url = url.replace("/uk2", "");
+                        params.apiKey = apiKey;
+                        params = querystring.stringify(params);
+                        return axios.put(url, params);
                     },
                     poll: (session, itinerary, params = {}) => {
-                        const url = `${API.flightPricingURL}/${session}/booking/${itinerary}`;
+                        const url = `${session}/booking/${itinerary}`;
                         params.apiKey = apiKey;
                         return axios.get(url, {params: params});
                     }
@@ -158,14 +158,12 @@ export class API {
                     });
                 },
                 poll: (session, deltaExcludedWebsites) => {
-                    const url = `${API.carHirePricingURL}/${session}`;
-
                     let params = {};
                     if (deltaExcludedWebsites) {
                         params.deltaExcludedWebsites = deltaExcludedWebsites;
                     }
 
-                    return axios.get(url, {params: params});
+                    return axios.get(session, {params: params});
                 }
             }
         };
@@ -193,8 +191,7 @@ export class API {
                     });
                 },
                 poll: (session, params = {}) => {
-                    const url = `${API.hotelPricingURL}/${session}`;
-                    return axios.get(url, {params: params});
+                    return axios.get(session, {params: params});
                 },
                 details: {
                     session: (session, params) => {

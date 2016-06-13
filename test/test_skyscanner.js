@@ -46,8 +46,7 @@ describe("API", () => {
                         adults: 1
                     })
                     .then((response) => {
-                        const location = response.headers.location;
-                        return location.substring(location.lastIndexOf("/") + 1);
+                        return response.headers.location;
                     })
                     .then((session) => {
                         return api.flights.livePrices.poll(session)
@@ -79,12 +78,11 @@ describe("API", () => {
                             locationSchema: "Iata",
                             originplace: "EDI",
                             destinationplace: "LHR",
-                            outbounddate: "2016-06-13",
+                            outbounddate: "2016-07-13",
                             adults: 1
                         })
                         .then((response) => {
-                            const location = response.headers.location;
-                            return location.substring(location.lastIndexOf("/") + 1);
+                            return response.headers.location;
                         })
                         .then((session) => {
                             return api.flights.livePrices.poll(session)
@@ -99,11 +97,14 @@ describe("API", () => {
                                 });
                         })
                         .then((itinerary) => {
-                            return api.flights.livePrices.bookingDetails.session(itinerary.session, itinerary)
-                                .then((response) => {
-                                    expect(response.status).to.equal(201);
-                                    expect(response.headers).to.contain.key("location");
-                                });
+                            return api.flights.livePrices.bookingDetails.session(itinerary.session, {
+                                outboundlegid: itinerary.outboundlegid,
+                                inboundlegid: itinerary.inboundlegid
+                            })
+                            .then((response) => {
+                                expect(response.status).to.equal(201);
+                                expect(response.headers).to.contain.key("location");
+                            });
                         });
                     });
                 });
@@ -117,12 +118,11 @@ describe("API", () => {
                             locationSchema: "Iata",
                             originplace: "EDI",
                             destinationplace: "LHR",
-                            outbounddate: "2016-06-13",
+                            outbounddate: "2016-07-13",
                             adults: 1
                         })
                         .then((response) => {
-                            const location = response.headers.location;
-                            return location.substring(location.lastIndexOf("/") + 1);
+                            return response.headers.location;
                         })
                         .then((session) => {
                             return api.flights.livePrices.poll(session)
@@ -137,14 +137,17 @@ describe("API", () => {
                                 });
                         })
                         .then((itinerary) => {
-                            return api.flights.livePrices.bookingDetails.session(itinerary.session, itinerary)
-                                .then((response) => {
-                                    const location = response.headers.location;
-                                    return {
-                                        session: itinerary.session,
-                                        itinerary: location.substring(location.lastIndexOf("/") + 1)
-                                    };
-                                });
+                            return api.flights.livePrices.bookingDetails.session(itinerary.session, {
+                                outboundlegid: itinerary.outboundlegid,
+                                inboundlegid: itinerary.inboundlegid
+                            })
+                            .then((response) => {
+                                const location = response.headers.location;
+                                return {
+                                    session: itinerary.session,
+                                    itinerary: location.substring(location.lastIndexOf("/") + 1)
+                                };
+                            });
                         })
                         .then((itinerary) => {
                             return api.flights.livePrices.bookingDetails.poll(itinerary.session, itinerary.itinerary)
@@ -278,8 +281,7 @@ describe("API", () => {
                         ip: "127.0.0.1"
                     })
                     .then((response) => {
-                        const location = response.headers.location;
-                        return location.substring(location.lastIndexOf("/") + 1);
+                        return `http://partners.api.skyscanner.net${response.headers.location}`;
                     })
                     .then((session) => {
                         return api.carHire.livePrices.poll(session)
@@ -333,8 +335,7 @@ describe("API", () => {
                         rooms: 1
                     })
                     .then((response) => {
-                        const location = response.headers.location;
-                        return location.substring(location.lastIndexOf("/") + 1);
+                        return `http://partners.api.skyscanner.net${response.headers.location}`;
                     })
                     .then((session) => {
                         return api.hotels.livePrices.poll(session)
