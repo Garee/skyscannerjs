@@ -197,3 +197,130 @@ api.carHire.livePricing.poll(session).then((response) => {
 
 [Documentation](http://business.skyscanner.net/portal/en-GB/Documentation/CarHireLivePricing#pollsession)
 
+## Create a hotels live pricing session
+
+```javascript
+api.hotels.livePrices.session({
+    market: "UK",
+    currency: "GBP",
+    locale: "en-GB",
+    entityId: "41.37,2.14-latlong",
+    checkindate: "2016-06-13",
+    checkoutdate: "2016-06-14",
+    guests: 1,
+    rooms: 1
+})
+.then((response) => {
+    // URL to poll the session.
+    const location = response.headers.location;
+});
+```
+
+[Documentation](http://business.skyscanner.net/portal/en-GB/Documentation/HotelsLivePricingList#createsession)
+
+## Poll the hotels live pricing session
+
+```javascript
+api.hotels.livePricing.poll(session).then((response) => {
+    const hotels = response.data.hotels;
+    const status = response.data.status;
+    ...
+});
+```
+
+[Documentation](http://business.skyscanner.net/portal/en-GB/Documentation/HotelsLivePricingList#pollsession)
+
+## Create a hotel details session
+
+```javascript
+api.hotels.livePrices.details.session(session, {
+    HotelIds: "1,2,3"
+})
+.then((response) => {
+    // URL to poll the session.
+    const location = response.headers.location;
+});
+```
+
+[Documentation](http://business.skyscanner.net/portal/en-GB/Documentation/HotelsLivePricingList#createdetails)
+
+## Poll a hotel details session
+
+```javascript
+api.hotels.livePrices.details.poll(session, {
+    HotelIds: "1,2,3"
+})
+.then((response) => {
+    ...                 
+});
+```
+
+[Documentation](http://business.skyscanner.net/portal/en-GB/Documentation/HotelsLivePricingList#polldetails)
+
+## Use the hotel autosuggest service
+
+```javascript
+api.hotels.autosuggest({
+    market: "UK",
+    currency: "GBP",
+    locale: "en-GB",
+    query: "pari"
+})
+.then((reponse) => {
+    const results = response.data.results;
+    const places = response.data.places;
+    ...
+});
+```
+
+[Documentation](http://business.skyscanner.net/portal/en-GB/Documentation/HotelsAutoSuggest)
+
+## Get all supported currencies
+
+```javascript
+api.reference.currencies().then((response) => {
+    const currencies = response.data.Currencies;
+    ...
+});
+```
+
+[Documentation](http://business.skyscanner.net/portal/en-GB/Documentation/Currencies)
+
+## Get all supported locales
+
+```javascript
+api.reference.locales().then((response) => {
+    const locales = response.data.Locales;
+    ...
+});
+```
+
+[Documentation](http://business.skyscanner.net/portal/en-GB/Documentation/Locales)
+
+## Get all supported countries
+
+```javascript
+api.reference.countries().then((response) => {
+    const countries = response.data.Countries;
+    ...
+});
+```
+
+[Documentation](http://business.skyscanner.net/portal/en-GB/Documentation/Markets)
+
+## Use the location autosuggest service
+
+```javascript
+api.locationAutosuggest({
+    market: "UK",
+    currency: "GBP",
+    locale: "en-GB",
+    query: "ed"
+})
+.then((response) => {
+    const places = response.data.Places;
+    ...
+});
+```
+
+[Documentation](http://business.skyscanner.net/portal/en-GB/Documentation/Autosuggest)
