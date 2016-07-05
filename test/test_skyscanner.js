@@ -8,8 +8,16 @@ if (!API_KEY) {
 
 describe("API", () => {
     let api;
+    let startDate;
+    let endDate;
+
     beforeEach(() => {
         api = new API(API_KEY);
+
+        let date = new Date()
+        startDate = date.toISOString().split("T")[0]
+        date.setMonth(date.getMonth() + 1)
+        endDate = date.toISOString().split("T")[0]
     });
 
     describe("flights", () => {
@@ -23,7 +31,7 @@ describe("API", () => {
                         locationSchema: "Iata",
                         originplace: "EDI",
                         destinationplace: "LHR",
-                        outbounddate: "2016-06-13",
+                        outbounddate: startDate,
                         adults: 1
                     })
                     .then((response) => {
@@ -42,7 +50,7 @@ describe("API", () => {
                         locationSchema: "Iata",
                         originplace: "EDI",
                         destinationplace: "LHR",
-                        outbounddate: "2016-06-13",
+                        outbounddate: startDate,
                         adults: 1
                     })
                     .then((response) => {
@@ -78,7 +86,7 @@ describe("API", () => {
                             locationSchema: "Iata",
                             originplace: "EDI",
                             destinationplace: "LHR",
-                            outbounddate: "2016-07-13",
+                            outbounddate: startDate,
                             adults: 1
                         })
                         .then((response) => {
@@ -118,7 +126,7 @@ describe("API", () => {
                             locationSchema: "Iata",
                             originplace: "EDI",
                             destinationplace: "LHR",
-                            outbounddate: "2016-07-13",
+                            outbounddate: startDate,
                             adults: 1
                         })
                         .then((response) => {
@@ -177,7 +185,7 @@ describe("API", () => {
                         locale: "en-GB",
                         originPlace: "EDI",
                         destinationPlace: "LHR",
-                        outboundPartialDate: "2016-06-13",
+                        outboundPartialDate: startDate,
                         ip: "127.0.0.1"
                     })
                     .then((response) => {
@@ -195,7 +203,7 @@ describe("API", () => {
                         locale: "en-GB",
                         originPlace: "EDI",
                         destinationPlace: "LHR",
-                        outboundPartialDate: "2016-06-13",
+                        outboundPartialDate: startDate,
                         ip: "127.0.0.1"
                     })
                     .then((response) => {
@@ -214,7 +222,7 @@ describe("API", () => {
                         locale: "en-GB",
                         originPlace: "EDI",
                         destinationPlace: "LHR",
-                        outboundPartialDate: "2016-06-13",
+                        outboundPartialDate: startDate,
                         ip: "127.0.0.1"
                     })
                     .then((response) => {
@@ -233,7 +241,7 @@ describe("API", () => {
                         locale: "en-GB",
                         originPlace: "EDI",
                         destinationPlace: "LHR",
-                        outboundPartialDate: "2016-06-13",
+                        outboundPartialDate: startDate,
                         ip: "127.0.0.1"
                     })
                     .then((response) => {
@@ -255,8 +263,8 @@ describe("API", () => {
                         locale: "en-GB",
                         pickupplace: "EDI",
                         dropoffplace: "GLA",
-                        pickupdatetime: "2016-06-13T19:00",
-                        dropoffdatetime: "2016-06-14T19:00",
+                        pickupdatetime: startDate + "T19:00",
+                        dropoffdatetime: endDate + "T19:00",
                         driverage: 40,
                         ip: "127.0.0.1"
                     })
@@ -275,8 +283,8 @@ describe("API", () => {
                         locale: "en-GB",
                         pickupplace: "EDI",
                         dropoffplace: "GLA",
-                        pickupdatetime: "2016-06-13T19:00",
-                        dropoffdatetime: "2016-06-14T19:00",
+                        pickupdatetime: startDate + "T19:00",
+                        dropoffdatetime: endDate + "T19:00",
                         driverage: 40,
                         ip: "127.0.0.1"
                     })
@@ -310,8 +318,8 @@ describe("API", () => {
                         currency: "GBP",
                         locale: "en-GB",
                         entityId: "41.37,2.14-latlong",
-                        checkindate: "2016-06-13",
-                        checkoutdate: "2016-06-14",
+                        checkindate: startDate,
+                        checkoutdate: endDate,
                         guests: 1,
                         rooms: 1
                     })
@@ -329,8 +337,8 @@ describe("API", () => {
                         currency: "GBP",
                         locale: "en-GB",
                         entityId: "41.37,2.14-latlong",
-                        checkindate: "2016-06-13",
-                        checkoutdate: "2016-06-14",
+                        checkindate: startDate,
+                        checkoutdate: endDate,
                         guests: 1,
                         rooms: 1
                     })
@@ -362,8 +370,8 @@ describe("API", () => {
                             currency: "GBP",
                             locale: "en-GB",
                             entityId: "41.37,2.14-latlong",
-                            checkindate: "2016-06-13",
-                            checkoutdate: "2016-06-14",
+                            checkindate: startDate,
+                            checkoutdate: endDate,
                             guests: 1,
                             rooms: 1
                         })
@@ -388,8 +396,8 @@ describe("API", () => {
                             currency: "GBP",
                             locale: "en-GB",
                             entityId: "41.37,2.14-latlong",
-                            checkindate: "2016-06-13",
-                            checkoutdate: "2016-06-14",
+                            checkindate: startDate,
+                            checkoutdate: endDate,
                             guests: 1,
                             rooms: 1
                         })
