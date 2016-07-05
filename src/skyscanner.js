@@ -25,7 +25,7 @@ export class API {
                 bookingDetails: {
                     session: (session, params) => {
                         let url = `${session}/booking`;
-                        url = url.replace("/uk2", "");
+                        url = url.replace(/\/uk\d/, "");
                         params.apiKey = apiKey;
                         params = querystring.stringify(params);
                         return axios.put(url, params);
