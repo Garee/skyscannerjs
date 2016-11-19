@@ -298,9 +298,10 @@ api.reference.locales().then((response) => {
 [Documentation](http://business.skyscanner.net/portal/en-GB/Documentation/Locales)
 
 ## Get all supported countries
+For example `locale`can be equal to `en-US`, the best way is to get supported locales for this query.
 
 ```javascript
-api.reference.countries().then((response) => {
+api.reference.countries(locale).then((response) => {
     const countries = response.data.Countries;
     ...
 });
