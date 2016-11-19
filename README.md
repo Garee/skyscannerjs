@@ -17,15 +17,15 @@ $ npm install skyscannerjs
 ### Create an API object
 
 ```javascript
-import skyscanner from "skyscanner";
+import {API} from "skyscannerjs";
 const apiKey = "s3r3t4PIk3y";
-const api = new skyscanner.API(apiKey);
+const api = new API(apiKey);
 ```
 
 ### Create a flight live pricing session
 
 ```javascript
-api.flights.livePricing.session({
+api.flights.livePrices.session({
     country: "UK",
     currency: "GBP",
     locale: "en-GB",
@@ -46,7 +46,7 @@ api.flights.livePricing.session({
 ### Poll a flight living pricing session
 
 ```javascript
-api.flights.livePricing.poll(session).then((response) => {
+api.flights.livePrices.poll(session).then((response) => {
     const itineraries = response.data.Itineraries;
     const legs = response.data.legs;
     ...
@@ -58,7 +58,7 @@ api.flights.livePricing.poll(session).then((response) => {
 ### Create a flight booking details session
 
 ```javascript
-api.flights.livePricing.bookingDetails.session(session, {
+api.flights.livePrices.bookingDetails.session(session, {
     outboundlegid: "",
     inboundlegid: ""
 })
@@ -73,7 +73,7 @@ api.flights.livePricing.bookingDetails.session(session, {
 ### Poll a flight booking details session
 
 ```javascript
-api.flights.livePricing.bookingDetails.poll(session, itinerary).then((response) => {
+api.flights.livePrices.bookingDetails.poll(session, itinerary).then((response) => {
     const options = response.data.BookingOptions;    
     const places = response.data.Places;
     ...
@@ -168,7 +168,7 @@ api.flights.browse.grid({
 ## Create a car hire live pricing session
 
 ```javascript
-api.carHire.livePricing.session({
+api.carHire.livePrices.session({
     market: "UK",
     currency: "GBP",
     locale: "en-GB",
@@ -189,7 +189,7 @@ api.carHire.livePricing.session({
 ## Poll a car hire live pricing session
 
 ```javascript
-api.carHire.livePricing.poll(session).then((response) => {
+api.carHire.livePrices.poll(session).then((response) => {
     const cars = reponse.data.cars;
     ...
 });
@@ -221,7 +221,7 @@ api.hotels.livePrices.session({
 ## Poll the hotels live pricing session
 
 ```javascript
-api.hotels.livePricing.poll(session).then((response) => {
+api.hotels.livePrices.poll(session).then((response) => {
     const hotels = response.data.hotels;
     const status = response.data.status;
     ...
