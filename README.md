@@ -5,6 +5,7 @@ Promise based wrapper for the Skyscanner travel APIs.
 [![npm version](https://badge.fury.io/js/skyscannerjs.svg)](https://badge.fury.io/js/skyscannerjs)
 [![npm downloads](https://img.shields.io/npm/dm/skyscannerjs.svg)](https://img.shields.io/npm/dm/skyscannerjs)
 [![CI status](https://travis-ci.org/Garee/skyscannerjs.svg?branch=master)](https://travis-ci.org/Garee/skyscannerjs)
+![](https://img.shields.io/maintenance/yes/2016.svg)
 
 ## Install
 
